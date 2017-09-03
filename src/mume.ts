@@ -14,7 +14,7 @@ let CONFIG_CHANGE_CALLBACK:()=>void = null
 
 export const utility = utility_
 export const configs = utility.configs
-export {MarkdownEngineConfig, MarkdownEngine} from "./markdown-engine"
+export {MarkdownEngineConfig, MarkdownEngine} from "./blog-engine"
 export {CodeChunkData} from "./code-chunk-data"
 
 /**
