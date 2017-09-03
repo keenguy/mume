@@ -173,7 +173,7 @@ export function ebookConvert(src, dest, config={}) {
     // ebook-convert will cause error if directory doesn't exist,
     // therefore I will create directory first.
     mkdirp(path.dirname(dest), (error, made)=> {
-      execFile('ebook-convert', args, (error)=> {
+      execFile('ebook-convert', args, {}, (error)=> {
         if (error) return reject(error.toString())
         else return resolve()
       })

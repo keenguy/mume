@@ -3,7 +3,7 @@ import {execFile} from "child_process"
 
 export function princeConvert(src, dest):Promise<string> {
   return new Promise((resolve, reject)=> {
-    execFile('prince', [src, '--javascript', '-o', dest], function(error:Error) {
+    execFile('prince', [src, '--javascript', '-o', dest], {}, function(error:Error) {
       if (error) {
         let errorMessage = error.toString()
         if (error.message.indexOf('spawn prince ENOENT') >= 0) {
