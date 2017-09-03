@@ -1261,6 +1261,7 @@ function toggleTocLink(event){
   public async blogHtmlExport({offline=false, runAllCodeChunks=false, cb}):Promise<string> {
     const inputString = await utility.readFile(this.filePath, {encoding:'utf-8'})
     let {html, yamlConfig} = await this.parseMD(inputString, {useRelativeFilePath:true, hideFrontMatter:true, isForPreview: false, runAllCodeChunks})
+    if (yamlConfig.draft) return Promise.resolve(`Ignored: ${this.filePath} is a draft.`);
     const htmlConfig = yamlConfig['html'] || {}
     if ('offline' in htmlConfig) {
         offline = htmlConfig['offline']
@@ -2674,7 +2675,7 @@ function toggleTocLink(event){
       }
     })
   }
-
+  
   public async parseMD(inputString:string, options:MarkdownEngineRenderOption):Promise<MarkdownEngineOutput> {
     if (!inputString) inputString = await utility.readFile(this.filePath, {encoding:'utf-8'})
 
