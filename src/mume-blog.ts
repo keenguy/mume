@@ -248,6 +248,7 @@ export class MumeBlog {
                 link += '/';
                 icon = '<i class="fa fa-folder-o" aria-hidden="true"></i>';
             } else {
+                if (file.config && file.config.draft) return ;
                 if (file.config && file.config.title) {
                     title = file.config.title;
                 }
