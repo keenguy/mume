@@ -1,3 +1,21 @@
+This is a forked repo adapted to bloging 
+1. added mume-blog.ts, changed the main entry in package.json to it.
+2. added blog-engine.ts, which is a modification copy of markdown-engine.ts
+3. changed some entries in package.json
+
+Usage
+```
+const siteConfig = {
+    title: "Yong's Blog",
+    url: "blog.yonggu.me",
+    gitRepo: "https://github.com/keenguy/blogit"
+}
+
+const site = new MumeBlog(srcDir,buildDir,siteConfig);
+site.generateHtmls();
+```
+You should handle other assets(CNAME, css) manually.
+
 # MUME
 This library powers:
 
