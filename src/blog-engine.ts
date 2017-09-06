@@ -3,12 +3,12 @@ import * as fs from "fs"
 import * as cheerio from "cheerio"
 // import * as request from "request"
 import * as YAML from "yamljs"
-import { execFile } from "child_process"
+// import { execFile } from "child_process"
 
 // import * as plantumlAPI from "./puml"
-import * as vegaAPI from "./vega"
-import * as vegaLiteAPI from "./vega-lite"
-import * as ditaaAPI from "./ditaa"
+// import * as vegaAPI from "./vega"
+// import * as vegaLiteAPI from "./vega-lite"
+// import * as ditaaAPI from "./ditaa"
 import * as utility from "./utility"
 import { scopeForLanguageName } from "./extension-helper"
 import { transformMarkdown, HeadingData } from "./transformer"
@@ -17,7 +17,7 @@ import { toc } from "./toc"
 // import { princeConvert } from "./prince-convert"
 // import { ebookConvert } from "./ebook-convert"
 // import { pandocConvert } from "./pandoc-convert"
-import { markdownConvert } from "./markdown-convert"
+// import { markdownConvert } from "./markdown-convert"
 import * as CodeChunkAPI from "./code-chunk"
 import { CodeChunkData } from "./code-chunk-data"
 
@@ -25,10 +25,10 @@ import { CodeChunkData } from "./code-chunk-data"
 const extensionDirectoryPath = utility.extensionDirectoryPath
 const katex = require(path.resolve(extensionDirectoryPath, './dependencies/katex/katex.min.js'))
 const MarkdownIt = require(path.resolve(extensionDirectoryPath, './dependencies/markdown-it/markdown-it.min.js'))
-const md5 = require(path.resolve(extensionDirectoryPath, './dependencies/javascript-md5/md5.js'))
-const CryptoJS = require(path.resolve(extensionDirectoryPath, './dependencies/crypto-js/crypto-js.js'))
-const Viz = require(path.resolve(extensionDirectoryPath, './dependencies/viz/viz.js'))
-const pdf = require(path.resolve(extensionDirectoryPath, './dependencies/node-html-pdf/index.js'))
+// const md5 = require(path.resolve(extensionDirectoryPath, './dependencies/javascript-md5/md5.js'))
+// const CryptoJS = require(path.resolve(extensionDirectoryPath, './dependencies/crypto-js/crypto-js.js'))
+// const Viz = require(path.resolve(extensionDirectoryPath, './dependencies/viz/viz.js'))
+// const pdf = require(path.resolve(extensionDirectoryPath, './dependencies/node-html-pdf/index.js'))
 
 // import * as Prism from "prismjs"
 let Prism = null
@@ -304,11 +304,11 @@ export class MarkdownEngine {
     }
     */
 
-    public cacheCodeChunkResult(id: string, result: string) {
-        const codeChunkData = this.codeChunksData[id]
-        if (!codeChunkData) return
-        codeChunkData.result = CryptoJS.AES.decrypt(result, 'mume').toString(CryptoJS.enc.Utf8)
-    }
+    // public cacheCodeChunkResult(id: string, result: string) {
+    //     const codeChunkData = this.codeChunksData[id]
+    //     if (!codeChunkData) return
+    //     codeChunkData.result = CryptoJS.AES.decrypt(result, 'mume').toString(CryptoJS.enc.Utf8)
+    // }
 
     /**
      * 
@@ -1078,14 +1078,14 @@ export class MarkdownEngine {
             if (options['cmd'] === 'toc') { // toc code chunk. <= this is a special code chunk.  
                 const tocObject = toc(this.headings, { ordered: options['orderedList'], depthFrom: options['depthFrom'], depthTo: options['depthTo'], tab: options['tab'] || '\t', ignoreLink: options['ignoreLink'] })
                 result = tocObject.content
-            } else if (options['cmd'] === 'ditaa') { // ditaa diagram
-                const filename = options['filename'] || `${md5(this.filePath + options['id'])}.png`
-                let imageFolder = utility.removeFileProtocol(this.resolveFilePath(this.config.imageFolderPath, false))
-                await utility.mkdirp(imageFolder)
+            // } else if (options['cmd'] === 'ditaa') { // ditaa diagram
+            //     const filename = options['filename'] || `${md5(this.filePath + options['id'])}.png`
+            //     let imageFolder = utility.removeFileProtocol(this.resolveFilePath(this.config.imageFolderPath, false))
+            //     await utility.mkdirp(imageFolder)
 
-                codeChunkData.options['output'] = 'markdown'
-                const dest = await ditaaAPI.render(code, options['args'] || [], path.resolve(imageFolder, filename))
-                result = `  \n![](${path.relative(this.fileDirectoryPath, dest).replace(/\\/g, '/')})  \n` // <= fix windows path issue.
+            //     codeChunkData.options['output'] = 'markdown'
+            //     const dest = await ditaaAPI.render(code, options['args'] || [], path.resolve(imageFolder, filename))
+            //     result = `  \n![](${path.relative(this.fileDirectoryPath, dest).replace(/\\/g, '/')})  \n` // <= fix windows path issue.
             } else { // common code chunk
                 // I put this line here because some code chunks like `toc` still need to be run.  
                 if (!this.config.enableScriptExecution) return '' // code chunk is disabled.
@@ -1235,55 +1235,55 @@ export class MarkdownEngine {
                 options['class'] = 'wavedrom'
             }
             $preElement.replaceWith(`<div ${utility.stringifyAttributes(options, false)}><script type="WaveDrom">${code}</script></div>`)
-        } else if (lang.match(/^(dot|viz)$/)) { // GraphViz
-            const checksum = md5(optionsStr + code)
-            let svg = this.graphsCache[checksum]
-            if (!svg) {
-                try {
-                    let engine = options['engine'] || "dot"
-                    svg = Viz(code, { engine })
+        // } else if (lang.match(/^(dot|viz)$/)) { // GraphViz
+        //     const checksum = md5(optionsStr + code)
+        //     let svg = this.graphsCache[checksum]
+        //     if (!svg) {
+        //         try {
+        //             let engine = options['engine'] || "dot"
+        //             svg = Viz(code, { engine })
 
-                    $preElement.replaceWith(`<p ${optionsStr ? utility.stringifyAttributes(options, false) : ''}>${svg}</p>`)
-                    graphsCache[checksum] = svg // store to new cache
-                } catch (e) {
-                    $preElement.replaceWith(`<pre class="language-text">${e.toString()}</pre>`)
-                }
-            } else {
-                $preElement.replaceWith(`<p ${optionsStr ? utility.stringifyAttributes(options, false) : ''}>${svg}</p>`)
-                graphsCache[checksum] = svg // store to new cache
-            }
-        } else if (lang.match(/^vega$/)) { // vega
-            const checksum = md5(optionsStr + code)
-            let svg: string = this.graphsCache[checksum]
-            if (!svg) {
-                try {
-                    svg = await vegaAPI.toSVG(code, this.fileDirectoryPath)
+        //             $preElement.replaceWith(`<p ${optionsStr ? utility.stringifyAttributes(options, false) : ''}>${svg}</p>`)
+        //             graphsCache[checksum] = svg // store to new cache
+        //         } catch (e) {
+        //             $preElement.replaceWith(`<pre class="language-text">${e.toString()}</pre>`)
+        //         }
+        //     } else {
+        //         $preElement.replaceWith(`<p ${optionsStr ? utility.stringifyAttributes(options, false) : ''}>${svg}</p>`)
+        //         graphsCache[checksum] = svg // store to new cache
+        //     }
+        // } else if (lang.match(/^vega$/)) { // vega
+        //     const checksum = md5(optionsStr + code)
+        //     let svg: string = this.graphsCache[checksum]
+        //     if (!svg) {
+        //         try {
+        //             svg = await vegaAPI.toSVG(code, this.fileDirectoryPath)
 
-                    $preElement.replaceWith(`<p ${optionsStr ? utility.stringifyAttributes(options, false) : ''}>${svg}</p>`)
-                    graphsCache[checksum] = svg // store to new cache 
-                } catch (error) {
-                    $preElement.replaceWith(`<pre class="language-text">${error.toString()}</pre>`)
-                }
-            } else {
-                $preElement.replaceWith(`<p ${optionsStr ? utility.stringifyAttributes(options, false) : ''}>${svg}</p>`)
-                graphsCache[checksum] = svg // store to new cache
-            }
-        } else if (lang === 'vega-lite') { // vega-lite
-            const checksum = md5(optionsStr + code)
-            let svg: string = this.graphsCache[checksum]
-            if (!svg) {
-                try {
-                    svg = await vegaLiteAPI.toSVG(code, this.fileDirectoryPath)
+        //             $preElement.replaceWith(`<p ${optionsStr ? utility.stringifyAttributes(options, false) : ''}>${svg}</p>`)
+        //             graphsCache[checksum] = svg // store to new cache 
+        //         } catch (error) {
+        //             $preElement.replaceWith(`<pre class="language-text">${error.toString()}</pre>`)
+        //         }
+        //     } else {
+        //         $preElement.replaceWith(`<p ${optionsStr ? utility.stringifyAttributes(options, false) : ''}>${svg}</p>`)
+        //         graphsCache[checksum] = svg // store to new cache
+        //     }
+        // } else if (lang === 'vega-lite') { // vega-lite
+        //     const checksum = md5(optionsStr + code)
+        //     let svg: string = this.graphsCache[checksum]
+        //     if (!svg) {
+        //         try {
+        //             svg = await vegaLiteAPI.toSVG(code, this.fileDirectoryPath)
 
-                    $preElement.replaceWith(`<p ${optionsStr ? utility.stringifyAttributes(options, false) : ''}>${svg}</p>`)
-                    graphsCache[checksum] = svg // store to new cache 
-                } catch (error) {
-                    $preElement.replaceWith(`<pre class="language-text">${error.toString()}</pre>`)
-                }
-            } else {
-                $preElement.replaceWith(`<p ${optionsStr ? utility.stringifyAttributes(options, false) : ''}>${svg}</p>`)
-                graphsCache[checksum] = svg // store to new cache
-            }
+        //             $preElement.replaceWith(`<p ${optionsStr ? utility.stringifyAttributes(options, false) : ''}>${svg}</p>`)
+        //             graphsCache[checksum] = svg // store to new cache 
+        //         } catch (error) {
+        //             $preElement.replaceWith(`<pre class="language-text">${error.toString()}</pre>`)
+        //         }
+        //     } else {
+        //         $preElement.replaceWith(`<p ${optionsStr ? utility.stringifyAttributes(options, false) : ''}>${svg}</p>`)
+        //         graphsCache[checksum] = svg // store to new cache
+        //     }
         } else if (options['cmd']) {
             const $el = $("<div class=\"code-chunk\"></div>") // create code chunk
             if (!options['id']) {

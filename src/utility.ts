@@ -434,7 +434,7 @@ export const configs:
   config: {}
 }
 
-export {uploadImage} from "./image-uploader"
+// export {uploadImage} from "./image-uploader"
 
 /**
  * {#identifier .class .class key=value key=value}
