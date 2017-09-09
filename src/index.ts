@@ -63,7 +63,7 @@ async function copyData() {
 async function compileCss() {
     let lessEvents = [];
     return new Promise((resolve, reject) => {
-        klaw(path.resolve(srcDir,'assets/css')).on('data', item => {
+        klaw(path.resolve(cwd,'assets/css')).on('data', item => {
             if (path.extname(item.path) != '.less')
                 return;
             // console.log(item.path);
