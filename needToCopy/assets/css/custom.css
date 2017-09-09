@@ -1,0 +1,188 @@
+/*
+.markdown-preview, .scrollbar-style, .token, .namespace, .language-css, .style are used in style.css 
+as top-level class selectors. They should be avoided in this file as top-level class selectors
+*/
+.my-menu {
+  font-size: 22px;
+}
+.my-menu a {
+  padding: 0 24px 0 12px;
+  border-left: 4px solid #85d5b3;
+}
+.post-list {
+  margin: 22px 0;
+  border-radius: 6px;
+  border: 4px solid #f5f2f0;
+  background: #fff;
+}
+.post-list ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.post-list ol li {
+  padding: 16px 20px 14px 55px;
+  display: list-item;
+  border-bottom: 1px solid #ede8e0;
+}
+.page-nav-item {
+  color: #7d7d7d;
+  position: fixed;
+  top: 50%;
+  width: 81px;
+  height: 90px;
+  margin-top: -45px;
+  outline: 0;
+}
+.page-nav-item:hover {
+  background: rgba(217, 217, 217, 0.3);
+}
+.page-nav-pre {
+  left: 0;
+  transition: top 0.2s, -webkit-transform 0.2s;
+  transition: transform .2s, top .2s;
+  transition: transform 0.2s, top 0.2s, -webkit-transform 0.2s;
+}
+.page-nav-next {
+  right: 0;
+  transition: top .2s;
+}
+.page-nav-text-alt {
+  display: none;
+}
+.page-nav-text {
+  font-size: 13px;
+  position: absolute;
+  top: 50%;
+  margin-top: -33px;
+  box-sizing: border-box;
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
+  font-family: FontAwesome;
+}
+.page-nav-text::before {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 36px;
+  min-height: 68px;
+  line-height: 64px;
+  color: #7e7e7e;
+}
+.page-nav-pre .page-nav-text::before {
+  content: "\f104";
+}
+.page-nav-next .page-nav-text::before {
+  content: "\f105";
+}
+@media screen and (max-width: 1000px) {
+  .page-nav-wrap {
+    position: relative;
+    display: block;
+    white-space: nowrap;
+    margin: 20px 0;
+  }
+  .page-nav-wrap:after {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: #f5f2f0;
+    content: "";
+  }
+  .page-nav-item {
+    position: relative;
+    top: 0;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 50%;
+    height: auto;
+    padding: 17px 0;
+    margin-top: auto;
+    border: 3px solid #f5f2f0;
+    text-align: center;
+    white-space: normal;
+  }
+  .page-nav-text {
+    top: 0;
+    bottom: 0;
+    margin: 0;
+    width: 30px;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .page-nav-text-alt {
+    display: block;
+    color: #333;
+    white-space: nowrap;
+  }
+  .page-nav-pre {
+    padding-left: 30px;
+    border-right-width: 0;
+    border-radius: 6px 0 0 6px;
+  }
+  .page-nav-pre .page-nav-text {
+    left: 0;
+  }
+  .page-nav-next {
+    padding-right: 30px;
+    border-left-width: 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .page-nav-next .page-nav-text {
+    right: 0;
+  }
+}
+i.fa {
+  margin-right: 10px;
+}
+.ribbon {
+  font-size: 16px !important;
+  /* This ribbon is based on a 16px font side and a 24px vertical rhythm. I've used em's to position each element for scalability. If you want to use a different font size you may have to play with the position of the ribbon elements */
+  width: 50%;
+  position: relative;
+  background: #ba89b6;
+  color: #fff;
+  text-align: center;
+  padding: 1em 2em;
+  /* Adjust to suit */
+  margin: 2em auto 3em;
+  /* Based on 24px vertical rhythm. 48px bottom margin - normally 24 but the ribbon 'graphics' take up 24px themselves so we double it. */
+}
+.ribbon:before,
+.ribbon:after {
+  content: "";
+  position: absolute;
+  display: block;
+  bottom: -1em;
+  border: 1.5em solid #986794;
+  z-index: -1;
+}
+.ribbon:before {
+  left: -2em;
+  border-right-width: 1.5em;
+  border-left-color: transparent;
+}
+.ribbon:after {
+  right: -2em;
+  border-left-width: 1.5em;
+  border-right-color: transparent;
+}
+.ribbon .ribbon-content:before,
+.ribbon .ribbon-content:after {
+  content: "";
+  position: absolute;
+  display: block;
+  border-style: solid;
+  border-color: #804f7c transparent transparent transparent;
+  bottom: -1em;
+}
+.ribbon .ribbon-content:before {
+  left: 0;
+  border-width: 1em 0 0 1em;
+}
+.ribbon .ribbon-content:after {
+  right: 0;
+  border-width: 1em 1em 0 0;
+}

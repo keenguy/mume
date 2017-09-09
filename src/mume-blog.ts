@@ -16,21 +16,30 @@ import {MarkdownEngine as BlogEngine} from './blog-engine';
 
 export interface SiteConfig {
     title: string
-    copyFiles?: string[]
 }
 interface HTMLTemplate {
     tempHtml: string
     stylesheet: string
+}
+interface FileData {
+    name: string
+    stats: any
+    config?: any
+    html?: string
+}
+interface DirData {
+    path: string
+    files: string[]
 }
 export class MumeBlog {
 
     private src: string
     private root: string
     private config: SiteConfig
-    private files: {}
-    private dirs: {}
+    private files: {[key:string]: FileData;}
+    private dirs: {[key:string]: DirData}
 
-    constructor(srcDir, buildDir, siteConfig?: SiteConfig) {
+    constructor(srcDir:string, buildDir:string, siteConfig?: SiteConfig) {
         this.src = srcDir;
         this.root = buildDir;
         this.config = Object.assign({
@@ -39,6 +48,11 @@ export class MumeBlog {
         this.dirs = {}; //dirPath: dirInfo
         this.files = {}; //filePath: pageInfo
     }
+    init(){
+        fs.copyDir("needToCopy", this.root).then(()=>{
+            console.log("Blog initialized!");
+        })
+    }
     async generateHtmls() {
         await this.getBlogData();
         this.processData();
@@ -46,7 +60,7 @@ export class MumeBlog {
     async getBlogData() {
         const filterFunc = item => {
             const basename = path.basename(item)
-            return basename === '.' || basename[0] !== '.'
+            return basename[0] !== '.'  //ignore hidden files
         }
         return new Promise((resolve, reject) => {
             console.log("Reading data...");
@@ -65,7 +79,7 @@ export class MumeBlog {
                     const dirPath = this.getRelPath(path.dirname(item.path));
                     this.dirs[dirPath].files.push(filePath);
                 }
-                this.files[filePath] = { stats: item.stats };
+                this.files[filePath] = { name: path.basename[filePath],stats: item.stats };
                 if (path.extname(item.path) != ".md") return;
                 const engine = new BlogEngine({
                     filePath: item.path,
@@ -144,7 +158,7 @@ export class MumeBlog {
     //     }
     //     await Promise.all(asyncEvents).then(() => console.log('(^_^) Copy assets and other files succeed!'));
     // }
-    exportHtml(filePath) {
+    exportHtml(filePath:string) {
         const file = this.files[filePath];
         let dest = '';
         let html = '';
@@ -217,7 +231,7 @@ export class MumeBlog {
         return { dest, html }
     }
 
-    createIndex(dir) {
+    private createIndex(dir:DirData) {
         const dest = path.resolve(this.root, dir.path, 'index.html');
         // console.log("creating:", dest);
         let $ = cheerio.load(template.tempHtml, { xmlMode: true });
@@ -229,7 +243,7 @@ export class MumeBlog {
         return { dest, html: $.html() };
     }
 
-    generatePostList(dir) {
+    private generatePostList(dir:DirData) {
         let listHtml = '<div class="post-list" style="margin-top: 40px;"><ol>';
         dir.files.forEach((filePath) => {
             if (path.basename(filePath) == 'index.md') {
@@ -259,7 +273,7 @@ export class MumeBlog {
         return listHtml;
     }
 
-    generatePathBrowser(filePath) {
+    generatePathBrowser(filePath:string) {
         // console.log("generating path browser:", filePath);
         let html = path.basename(filePath);
         let link = path.dirname(filePath);
@@ -347,3 +361,4 @@ let template: HTMLTemplate = {
 <link rel="stylesheet" href="/assets/css/style.css">
 <link rel="stylesheet" href="/assets/css/custom.css">`
 }
+
