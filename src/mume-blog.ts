@@ -7,7 +7,7 @@
 const cheerio = require("cheerio");
 const klaw = require("klaw");
 var path = require('path');
-var fs = require('hexo-fs');
+var fs = require('fs-extra');
 // var less = require('less');
 // node.js 
 import {MarkdownEngine as BlogEngine} from './blog-engine';
@@ -49,7 +49,7 @@ export class MumeBlog {
         this.files = {}; //filePath: pageInfo
     }
     init(){
-        fs.copyDir("needToCopy", this.root).then(()=>{
+        fs.copy("needToCopy", this.root).then(()=>{
             console.log("Blog initialized!");
         })
     }

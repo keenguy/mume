@@ -1,8 +1,8 @@
 'use strict'
-import * as path from 'path';
-import { MumeBlog } from './mume-blog';
-import * as klaw from 'klaw';
-import * as fs from 'hexo-fs';
+import * as path from 'path'
+import { MumeBlog } from './mume-blog'
+import * as klaw from 'klaw'
+import * as fs from 'fs-extra'
 // const Promise = require('promise');
 import * as less from 'less';
 import * as del from 'del';
@@ -40,14 +40,14 @@ else{
  */
 async function copyData() {
     const copyFiles = [      // files other than assets that need to be copied.
-        'CNAME'
+        'CNAME',
+        'assets'
     ]
     let asyncEvents = [];
     await compileCss().then(() => console.log("(^_^) All less files in assets/ compiled."));
-    asyncEvents.push(fs.copyDir(path.resolve(srcDir,'assets'), path.resolve(buildDir, 'assets'), { ignorePattern: new RegExp('.less$') }));
     if (copyFiles) {
         copyFiles.forEach(filePath =>
-            asyncEvents.push(fs.copyFile(path.resolve(srcDir,filePath), path.resolve(buildDir, filePath))));
+            asyncEvents.push(fs.copy(path.resolve(srcDir,filePath), path.resolve(buildDir, filePath))));
     }
     await Promise.all(asyncEvents).then(() => console.log('(^_^) Copy assets and other files succeed!'));
 }
