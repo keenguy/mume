@@ -7,8 +7,9 @@ import * as fs from 'fs-extra'
 import * as less from 'less';
 import * as del from 'del';
 
-const srcDir = path.resolve(process.cwd(),'src');
-const buildDir = path.resolve(process.cwd(),'docs');
+const cwd = process.cwd();
+const srcDir = path.resolve(cwd,'src');
+const buildDir = path.resolve(cwd,'docs');
 
 const siteConfig = {
     title: "Yong's Blog",
@@ -37,7 +38,7 @@ else{
 
 
 function init() {
-    fs.copy("../../needToCopy", buildDir).then(() => {
+    fs.copy(path.resolve(__dirname,"../../needToCopy"), cwd).then(() => {
         console.log("Blog initialized!");
     });
 }
@@ -54,7 +55,7 @@ async function copyData() {
     await compileCss().then(() => console.log("(^_^) All less files in assets/ compiled."));
     if (copyFiles) {
         copyFiles.forEach(filePath =>
-            asyncEvents.push(fs.copy(path.resolve(srcDir,filePath), path.resolve(buildDir, filePath))));
+            asyncEvents.push(fs.copy(path.resolve(cwd,filePath), path.resolve(buildDir, filePath))));
     }
     await Promise.all(asyncEvents).then(() => console.log('(^_^) Copy assets and other files succeed!'));
 }
@@ -66,8 +67,8 @@ async function compileCss() {
             if (path.extname(item.path) != '.less')
                 return;
             // console.log(item.path);
-            let event = fs.readFile(item.path).then((str) => lessify(str, { paths: ['.'] }))
-                .then((output) => fs.writeFile(item.path.replace('.less', '.css'), output.css));
+            let event = fs.readFile(item.path, 'utf-8').then((str) => lessify(str, { paths: ['.'] }))
+                .then((output) => fs.outputFile(item.path.replace('.less', '.css'), output.css));
             lessEvents.push(event);
         }).on('end', () => Promise.all(lessEvents).then(resolve, reject));
     });

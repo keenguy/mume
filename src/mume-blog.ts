@@ -121,13 +121,13 @@ export class MumeBlog {
 
             if (!this.files[path.join(dirPath, 'index.md')]) {
                 let { dest, html } = this.createIndex(this.dirs[dirPath]);
-                asyncWriteEvents.push(fs.writeFile(dest, html));
+                asyncWriteEvents.push(fs.outputFile(dest, html));
             }
         })
 
         Object.keys(this.files).forEach((filePath) => {
             let { dest, html } = this.exportHtml(filePath);
-            if (dest && html) asyncWriteEvents.push(fs.writeFile(dest, html));
+            if (dest && html) asyncWriteEvents.push(fs.outputFile(dest, html));
         })
 
         return Promise.all(asyncWriteEvents).then(() => console.log("(^_^) Writing data finished!"));
@@ -138,7 +138,7 @@ export class MumeBlog {
     //         klaw('assets', { filter: item => path.extname(item) != '.less' }).on('data', item => {
     //             if (item.path.extname != '.less') return;
     //             let event = fs.readFile(item.path).then((str) => this.lessify(str, { paths: ['.'] }))
-    //                 .then((output) => fs.writeFile(item.path.replace('.less', '.css'), output.css));
+    //                 .then((output) => fs.outputFile(item.path.replace('.less', '.css'), output.css));
     //             lessEvents.push(event);
     //         }).on('end', () => Promise.all(lessEvents).then(resolve, reject));
     //     });
