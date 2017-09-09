@@ -44,10 +44,10 @@ async function copyData() {
     ]
     let asyncEvents = [];
     await compileCss().then(() => console.log("(^_^) All less files in assets/ compiled."));
-    asyncEvents.push(fs.copyDir('assets', path.resolve(buildDir, 'assets'), { ignorePattern: new RegExp('.less$') }));
+    asyncEvents.push(fs.copyDir(path.resolve(srcDir,'assets'), path.resolve(buildDir, 'assets'), { ignorePattern: new RegExp('.less$') }));
     if (copyFiles) {
         copyFiles.forEach(filePath =>
-            asyncEvents.push(fs.copyFile(filePath, path.resolve(buildDir, filePath))));
+            asyncEvents.push(fs.copyFile(path.resolve(srcDir,filePath), path.resolve(buildDir, filePath))));
     }
     await Promise.all(asyncEvents).then(() => console.log('(^_^) Copy assets and other files succeed!'));
 }
@@ -55,7 +55,7 @@ async function copyData() {
 async function compileCss() {
     let lessEvents = [];
     return new Promise((resolve, reject) => {
-        klaw('assets/css').on('data', item => {
+        klaw(path.resolve(srcDir,'assets/css')).on('data', item => {
             if (path.extname(item.path) != '.less')
                 return;
             // console.log(item.path);
