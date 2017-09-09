@@ -48,11 +48,6 @@ export class MumeBlog {
         this.dirs = {}; //dirPath: dirInfo
         this.files = {}; //filePath: pageInfo
     }
-    init(){
-        fs.copy("needToCopy", this.root).then(()=>{
-            console.log("Blog initialized!");
-        })
-    }
     async generateHtmls() {
         await this.getBlogData();
         this.processData();

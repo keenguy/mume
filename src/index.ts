@@ -21,7 +21,7 @@ const site = new MumeBlog(srcDir,buildDir,siteConfig);
 const arg = process.argv[2];
 
 if (arg == 'init'){
-    site.init();
+    init();
 }
 else if (arg == 'copy'){
     copyData();
@@ -33,6 +33,13 @@ else if (arg == 'copy'){
 else{
     site.generateHtmls();  // generate htmls based on 'srcDir', writing to 'buildDir'
     copyData();
+}
+
+
+function init() {
+    fs.copy("../../needToCopy", buildDir).then(() => {
+        console.log("Blog initialized!");
+    });
 }
 
 /* compile all .less files in 'assets/'; 
