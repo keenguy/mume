@@ -17,7 +17,13 @@ async function entry(arg) {
 
     arg = arg || process.argv[2] || '';
 
-
+    if (arg == 'init' || arg == 'i') {
+        init();
+        return;
+    }else if (arg == 'less' || arg == 'l') {
+        await compileCss().then(() => console.log("(^_^) All less files in assets/ compiled."));
+        return;
+    }
     await fs.readFile(path.resolve(cwd, '_config.yml'), 'utf-8').then((yamlStr) => {
         siteConfig = utility.parseYAML(yamlStr);
     })
@@ -46,17 +52,13 @@ async function entry(arg) {
         less(l) --- Compile less files in 'assets/css/'
         deploy(d) --- Push buildDir to git repo configured in the deploy field of _config.yml
         `)
-    } else if (arg == 'init' || arg == 'i') {
-        init();
-    }
+    } 
     else if (arg == 'copy' || arg == 'c') {
         copyData();
     } else if (arg == 'note' || arg == 'n') {
         site.generateHtmls();
     } else if (arg == 'deploy' || arg == 'd') {
         deploy();
-    } else if (arg == 'less' || arg == 'l') {
-        await compileCss().then(() => console.log("(^_^) All less files in assets/ compiled."));
     }
     else if (arg == 'build' || arg == 'b') {
         site.generateHtmls();  // generate htmls based on 'srcDir', writing to 'buildDir'
