@@ -19,7 +19,7 @@ let siteConfig:any = {
 
 async function entry(arg) {
 
-    arg = arg || process.argv[2];
+    arg = arg || process.argv[2] || '';
 
     
     await fs.readFile(path.resolve(cwd,'_config.yml'),'utf-8').then((yamlStr) => {
@@ -30,40 +30,50 @@ async function entry(arg) {
 
     const site = new MumeBlog(srcDir, buildDir, siteConfig);
 
-    if (arg == 'init') {
+    if (arg == 'help' || arg == '') {
+        console.log(`
+        init(i) --- Add the default _config.yml
+        build(b) --- Execute two commands:1. note  2. less & copy
+        copy(c) --- Copy two things to buildDir: 1. built-in assets  2. files specified in the 'copyFiles' field of _config.yml\n
+        note(n) --- Generate htmls in buildDir using md files in srcDir\n
+        less(l) --- Compile less files in 'assets/css/'
+        deploy(d) --- Push buildDir to git repo configured in the deploy field of _config.yml
+        `)
+    } else if(arg == 'init' || arg=='i'){
         init();
     }
-    else if (arg == 'copy') {
+    else if (arg == 'copy' || arg == 'c') {
         copyData();
-    } else if (arg == 'build') {
+    } else if (arg == 'note' || arg == 'n') {
         site.generateHtmls();
     } else if (arg == 'deploy' || arg == 'd') {
         deploy();
+    } else if (arg == 'less' || arg == 'l'){
+        await compileCss().then(() => console.log("(^_^) All less files in assets/ compiled."));
     }
-    else {
+    else if(arg == 'build' || arg == 'b'){
         site.generateHtmls();  // generate htmls based on 'srcDir', writing to 'buildDir'
+        await compileCss().then(() => console.log("(^_^) All less files in assets/ compiled."));
         copyData();
     }
 }
 
-function init() {
-    fs.copy(path.resolve(__dirname, "../../needToCopy"), cwd).then(() => {
-        console.log("Blog initialized!");
-    });
+function init(){
+    fs.copy(path.resolve(__dirname, "../../needToCopy/_config.yml"), path.resolve(cwd,'_config.yml')).then(()=>{
+        console.log("_config.yml are initialized.");
+    })
 }
 
-/* compile all .less files in 'assets/'; 
- *   copy 'assets/' and  site.copyFiles  to 'buildDir' (cwd: process.cwd())
+/* Two things need to be copied
+ * 1. needToCopy/ in this module
+ * 2. files specified in the 'copyFiles' field of _config.yml 
  */
 async function copyData() {
-    const copyFiles = [      // files other than assets that need to be copied.
-        'CNAME',
-        'assets'
-    ]
+
     let asyncEvents = [];
-    await compileCss().then(() => console.log("(^_^) All less files in assets/ compiled."));
-    if (copyFiles) {
-        copyFiles.forEach(filePath =>
+    asyncEvents.push(fs.copy(path.resolve(__dirname, "../../needToCopy/assets"), path.resolve(buildDir,'assets')));
+    if (siteConfig.copyFiles) {
+        siteConfig.copyFiles.forEach(filePath =>
             asyncEvents.push(fs.copy(path.resolve(cwd, filePath), path.resolve(buildDir, filePath))));
     }
     await Promise.all(asyncEvents).then(() => console.log('(^_^) Copy assets and other files succeed!'));
