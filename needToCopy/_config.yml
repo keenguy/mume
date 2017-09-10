@@ -4,7 +4,7 @@
 
 # Site
 title: Yong's Blog
-subtitle: My personal notes.
+subtitle: Keep writing, exercising, reviewing, thinking.
 author: Gu Yong
 language:
 timezone:
@@ -144,7 +144,8 @@ theme: huxblog
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
+
+#git push force
 deploy:
-  type: git
   repo: https://github.com/Keenguy/blog.git
   branch: master

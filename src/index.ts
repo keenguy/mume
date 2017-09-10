@@ -6,20 +6,27 @@ import * as fs from 'fs-extra'
 // const Promise = require('promise');
 import * as less from 'less';
 import * as del from 'del';
+import * as utility from './utility'
 
 const cwd = process.cwd();
 const srcDir = path.resolve(cwd, 'src');
 const buildDir = path.resolve(cwd, 'docs');
+let siteConfig:any = {
+    title: "Yong's Blog",
+    url: "blog.yonggu.me",
+    gitRepo: "https://github.com/keenguy/blogit"
+}
 
-function entry(arg) {
+async function entry(arg) {
 
     arg = arg || process.argv[2];
 
-    const siteConfig = {
-        title: "Yong's Blog",
-        url: "blog.yonggu.me",
-        gitRepo: "https://github.com/keenguy/blogit"
-    }
+    
+    await fs.readFile(path.resolve(cwd,'_config.yml'),'utf-8').then((yamlStr) => {
+        let config = utility.parseYAML(yamlStr);
+        siteConfig = Object.assign(siteConfig,config);
+    })
+    .catch((err)=>console.log("_config.yml does not exist! Default configurations are used."));
 
     const site = new MumeBlog(srcDir, buildDir, siteConfig);
 
@@ -86,6 +93,11 @@ function lessify(str, options) {
 }
 
 function deploy() {
+    const repo = siteConfig.deploy && siteConfig.deploy.repo || '';
+    if (!repo){
+        console.log("Deploy failed: no git repository.");
+    }
+    const branch = siteConfig.deploy.branch || 'master';
     del([
         // 这里我们使用一个通配模式来匹配 `mobile` 文件夹中的所有东西
         'docs/.git',
@@ -99,8 +111,8 @@ function deploy() {
             .init()
             .add('./*')
             .commit("commit by auto deployment!")
-            .addRemote('origin', 'https://github.com/keenguy/blog.git')
-            .push(['-f', 'origin', 'master']);
+            .addRemote('origin', repo)
+            .push(['-f', 'origin', branch]);
     });
 }
 

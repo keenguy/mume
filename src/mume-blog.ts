@@ -159,6 +159,7 @@ export class MumeBlog {
         let html = '';
         if (file.stats.isFile() && file.html) {
             dest = path.resolve(this.root, filePath.replace('.md', '.html'));
+            let title = file.name;
             const $ = cheerio.load(file.html, { xmlMode: true });
             $("head style").replaceWith(template.stylesheet);
 
@@ -183,9 +184,7 @@ export class MumeBlog {
                 metaHtml = '';
             }
             $(".markdown-preview").first().prepend(menuHtml + metaHtml);
-            if (yamlConfig.title) {
-                $("head title").html(yamlConfig.title);
-            }
+            
             $(".md-sidebar-toc a").attr('onclick', 'toggleTocLink(event)');
             if (path.basename(dest) == 'index.html') {
                 const type = file.config && file.config.assembleType || 'replace';
@@ -194,7 +193,13 @@ export class MumeBlog {
                 } else if (type == 'prepend') {
                     $('.markdown-preview').first().prepend(this.generatePostList(this.dirs[path.dirname(filePath)]));
                 }
+                title = path.basename(path.dirname(dest))
             }
+            if (yamlConfig.title) {
+                title = yamlConfig.title;
+            }
+            $("head title").html(title);
+            
             if (path.dirname(filePath) != '.' && path.basename(dest) != 'index.html') {
                 const filesArray = this.dirs[path.dirname(filePath)].files;
                 const idx = filesArray.indexOf(filePath);
