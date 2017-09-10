@@ -30,7 +30,7 @@ function entry(arg) {
         copyData();
     } else if (arg == 'build') {
         site.generateHtmls();
-    } else if (arg == 'deploy' || 'd') {
+    } else if (arg == 'deploy' || arg == 'd') {
         deploy();
     }
     else {

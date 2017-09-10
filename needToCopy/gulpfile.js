@@ -22,7 +22,7 @@ gulp.task('default',['rebuild']);
 
 
 gulp.task('rebuild', ['clean'], function(cb) {
-    exec('node index.js', function(err, stdout, stderr) {
+    exec('wret', function(err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         cb(err);
@@ -31,7 +31,7 @@ gulp.task('rebuild', ['clean'], function(cb) {
 
 //compile less; copy assets/, CNAME;
 gulp.task('copy', function(cb) {
-    exec('node index.js copy', function(err, stdout, stderr) {
+    exec('wret copy', function(err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         cb(err);
@@ -39,7 +39,16 @@ gulp.task('copy', function(cb) {
 })
 //generate html files
 gulp.task('build', function(cb) {
-    exec('node index.js build', function(err, stdout, stderr) {
+    exec('wret build', function(err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+})
+
+//generate html files
+gulp.task('deploy', function(cb) {
+    exec('wret d', function(err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         cb(err);
