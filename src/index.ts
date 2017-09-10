@@ -25,6 +25,7 @@ async function entry(arg) {
         less(l) --- Compile less files in 'assets/css/'
         deploy(d) --- Push buildDir to git repo configured in the deploy field of _config.yml
         `)
+        return;
     }else if (arg == 'init' || arg == 'i') {
         init();
         return;
@@ -33,6 +34,7 @@ async function entry(arg) {
         return;
     }
     if (!fs.pathExistsSync(path.resolve(cwd, '_config.yml'))){
+        console.log("_config.yml doesn't exist.");
         await init();
         return;
     }
