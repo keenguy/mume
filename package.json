@@ -1,5 +1,5 @@
 {
-    "name": "@keenguy/wret",
+    "name": "wret",
     "version": "0.0.1",
     "description": "A markdown notes bloging tool",
     "main": "out/src/index.js",
