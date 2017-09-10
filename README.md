@@ -5,7 +5,7 @@ This repo is forked from [mume](https://github.com/shd101wyy/mume), adapted to b
 3. added to changed: needToCopy/, bin/, package.json
 
 ## Install
-`npm install -g git+https://github.com/keenguy/wret.git#blog`
+`npm install -g git+https://github.com/keenguy/wret.git`
 
 ## How to use
 1. Prepare files
