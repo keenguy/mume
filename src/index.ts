@@ -20,26 +20,28 @@ async function entry(arg) {
     if (arg == 'init' || arg == 'i') {
         init();
         return;
-    }else if (arg == 'less' || arg == 'l') {
+    } else if (arg == 'less' || arg == 'l') {
         await compileCss().then(() => console.log("(^_^) All less files in assets/ compiled."));
         return;
     }
-    await fs.readFile(path.resolve(cwd, '_config.yml'), 'utf-8').then((yamlStr) => {
+    await fs.ensureFile(path.resolve(cwd, '_config.yml')).then((filePath) =>
+        fs.readFile(filePath, 'utf-8')
+    ).then((yamlStr) => {
         siteConfig = utility.parseYAML(yamlStr);
-    })
-        .catch((err) => {
-            console.log("_config.yml does not exist! Try 'wret init'.");
-            return;
-        });
+    }).catch((err) => {
+        console.log("_config.yml does not exist! Try 'wret init'.");
+        return;
+    });
+
     if (!siteConfig.title || !siteConfig.copyFiles || !siteConfig.deploy) {
         console.log("Error: Something is wrong with _config.yml ");
         return;
     }
     if (siteConfig.srcDir) {
-        srcDir = path.resolve(cwd,siteConfig.srcDir);
+        srcDir = path.resolve(cwd, siteConfig.srcDir);
     }
     if (siteConfig.buildDir) {
-        buildDir = path.resolve(cwd,siteConfig.buildDir);
+        buildDir = path.resolve(cwd, siteConfig.buildDir);
     }
     const site = new MumeBlog(srcDir, buildDir, siteConfig);
 
@@ -52,7 +54,7 @@ async function entry(arg) {
         less(l) --- Compile less files in 'assets/css/'
         deploy(d) --- Push buildDir to git repo configured in the deploy field of _config.yml
         `)
-    } 
+    }
     else if (arg == 'copy' || arg == 'c') {
         copyData();
     } else if (arg == 'note' || arg == 'n') {
@@ -81,10 +83,10 @@ async function copyData() {
 
     let asyncEvents = [];
     await fs.copy(path.resolve(__dirname, "../../needToCopy/assets"), path.resolve(buildDir, 'assets'))
-    .catch((err)=>console.log('needToCopy',err));
+        .catch((err) => console.log('needToCopy', err));
     if (siteConfig.copyFiles) {
         siteConfig.copyFiles.forEach(filePath =>
-            asyncEvents.push(fs.copy(path.resolve(cwd, filePath), path.resolve(buildDir, filePath)).catch((err)=>console.log(err))));
+            asyncEvents.push(fs.copy(path.resolve(cwd, filePath), path.resolve(buildDir, filePath)).catch((err) => console.log(err))));
     }
     await Promise.all(asyncEvents).then(() => console.log('(^_^) Copy assets and other files succeed!'));
 }
