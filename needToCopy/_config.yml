@@ -1,19 +1,20 @@
 # Wret Configuration
 ## Docs: 
 ## Source: https://github.com/keenguy/wret/
+## title, copyFiles, deploy are required, but can be empty
 
 # Site
-title: Yong's Blog
+title: Yong's Blog            
 subtitle: My personal notes.
 author: Gu Yong
 
-# URL
+# build settings
 url: http://blog.yonggu.me
 
-copyFiles: [
-  'CNAME',
-  'assets'
-]
+copyFiles: ['CNAME','assets']
+
+srcDir:
+buildDir:
 
 # Deployment
 deploy:
