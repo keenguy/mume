@@ -16,8 +16,16 @@ let siteConfig: any = {}
 async function entry(arg) {
 
     arg = arg || process.argv[2] || '';
-
-    if (arg == 'init' || arg == 'i') {
+    if (arg == 'help' || arg == '') {
+        console.log(`
+        init(i) --- Add the default _config.yml
+        build(b) --- Execute two commands:1. note  2. less & copy
+        copy(c) --- Copy two things to buildDir: 1. built-in assets  2. files specified in the 'copyFiles' field of _config.yml\n
+        note(n) --- Generate htmls in buildDir using md files in srcDir\n
+        less(l) --- Compile less files in 'assets/css/'
+        deploy(d) --- Push buildDir to git repo configured in the deploy field of _config.yml
+        `)
+    }else if (arg == 'init' || arg == 'i') {
         init();
         return;
     } else if (arg == 'less' || arg == 'l') {
@@ -26,6 +34,7 @@ async function entry(arg) {
     }
     if (!fs.pathExistsSync(path.resolve(cwd, '_config.yml'))){
         await init();
+        return;
     }
     await fs.readFile(path.resolve(cwd, '_config.yml'), 'utf-8').then((yamlStr) => {
         siteConfig = utility.parseYAML(yamlStr);
@@ -42,17 +51,8 @@ async function entry(arg) {
     }
     const site = new MumeBlog(srcDir, buildDir, siteConfig);
 
-    if (arg == 'help' || arg == '') {
-        console.log(`
-        init(i) --- Add the default _config.yml
-        build(b) --- Execute two commands:1. note  2. less & copy
-        copy(c) --- Copy two things to buildDir: 1. built-in assets  2. files specified in the 'copyFiles' field of _config.yml\n
-        note(n) --- Generate htmls in buildDir using md files in srcDir\n
-        less(l) --- Compile less files in 'assets/css/'
-        deploy(d) --- Push buildDir to git repo configured in the deploy field of _config.yml
-        `)
-    }
-    else if (arg == 'copy' || arg == 'c') {
+    
+    if (arg == 'copy' || arg == 'c') {
         copyData();
     } else if (arg == 'note' || arg == 'n') {
         site.generateHtmls();
