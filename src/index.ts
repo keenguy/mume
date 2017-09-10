@@ -24,15 +24,12 @@ async function entry(arg) {
         await compileCss().then(() => console.log("(^_^) All less files in assets/ compiled."));
         return;
     }
-    await fs.ensureFile(path.resolve(cwd, '_config.yml')).then((filePath) =>
-        fs.readFile(filePath, 'utf-8')
-    ).then((yamlStr) => {
+    if (!fs.pathExistsSync(path.resolve(cwd, '_config.yml'))){
+        await init();
+    }
+    await fs.readFile(path.resolve(cwd, '_config.yml'), 'utf-8').then((yamlStr) => {
         siteConfig = utility.parseYAML(yamlStr);
-    }).catch((err) => {
-        console.log("_config.yml does not exist! Try 'wret init'.");
-        return;
     });
-
     if (!siteConfig.title || !siteConfig.copyFiles || !siteConfig.deploy) {
         console.log("Error: Something is wrong with _config.yml ");
         return;
@@ -69,8 +66,8 @@ async function entry(arg) {
     }
 }
 
-function init() {
-    fs.copy(path.resolve(__dirname, "../../needToCopy/_config.yml"), path.resolve(cwd, '_config.yml')).then(() => {
+async function init() {
+    return fs.copy(path.resolve(__dirname, "../../needToCopy/_config.yml"), path.resolve(cwd, '_config.yml')).then(() => {
         console.log("_config.yml are initialized.");
     })
 }
