@@ -1,47 +1,50 @@
 {
-  "name": "@keenguy/mume-blog",
-  "version": "0.2.2",
-  "description": "A powerful markdown tool",
-  "main": "out/src/index.js",
-  "typings": "out/src/mume.d.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node_modules/.bin/tsc",
-    "prepare": "npm run build"
-  },
-  "files": [
-    "dependencies",
-    "docs",
-    "out",
-    "styles",
-    "needToCopy"
-  ],
-  "keywords": [
-    "markdown"
-  ],
-  "author": "shd101wyy",
-  "license": "NCSA",
-  "repository": "https://github.com/keenguy/mume-blog",
-  "dependencies": {
-    "babyparse": "^0.4.6",
-    "cheerio": "0.15.0",
-    "del": "^3.0.0",
-    "fs-extra": "^4.0.1",
-    "global-modules": "^1.0.0",
-    "klaw": "^2.1.0",
-    "less": "^2.7.2",
-    "mkdirp": "^0.5.1",
-    "request": "^2.81.0",
-    "simple-git": "^1.77.0",
-    "temp": "^0.8.3",
-    "uslug": "^1.0.4",
-    "yamljs": "^0.3.0"
-  },
-  "devDependencies": {
-    "@types/jquery": "^3.2.6",
-    "@types/mocha": "^2.2.41",
-    "@types/node": "^8.0.10",
-    "eslint": "^4.2.0",
-    "typescript": "^2.4.1"
-  }
+    "name": "@keenguy/mume-blog",
+    "version": "0.2.2",
+    "description": "A powerful markdown tool",
+    "main": "out/src/index.js",
+    "typings": "out/src/mume.d.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "node_modules/.bin/tsc",
+        "prepare": "npm run build"
+    },
+    "bin": {
+        "wret": "./bin/wret"
+    },
+    "files": [
+        "dependencies",
+        "docs",
+        "out",
+        "styles",
+        "needToCopy"
+    ],
+    "keywords": [
+        "markdown"
+    ],
+    "author": "shd101wyy",
+    "license": "NCSA",
+    "repository": "https://github.com/keenguy/mume-blog",
+    "dependencies": {
+        "babyparse": "^0.4.6",
+        "cheerio": "0.15.0",
+        "del": "^3.0.0",
+        "fs-extra": "^4.0.1",
+        "global-modules": "^1.0.0",
+        "klaw": "^2.1.0",
+        "less": "^2.7.2",
+        "mkdirp": "^0.5.1",
+        "request": "^2.81.0",
+        "simple-git": "^1.77.0",
+        "temp": "^0.8.3",
+        "uslug": "^1.0.4",
+        "yamljs": "^0.3.0"
+    },
+    "devDependencies": {
+        "@types/jquery": "^3.2.6",
+        "@types/mocha": "^2.2.41",
+        "@types/node": "^8.0.10",
+        "eslint": "^4.2.0",
+        "typescript": "^2.4.1"
+    }
 }

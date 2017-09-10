@@ -8,37 +8,39 @@ import * as less from 'less';
 import * as del from 'del';
 
 const cwd = process.cwd();
-const srcDir = path.resolve(cwd,'src');
-const buildDir = path.resolve(cwd,'docs');
+const srcDir = path.resolve(cwd, 'src');
+const buildDir = path.resolve(cwd, 'docs');
 
-const siteConfig = {
-    title: "Yong's Blog",
-    url: "blog.yonggu.me",
-    gitRepo: "https://github.com/keenguy/blogit"
+function entry(arg) {
+
+    arg = arg || process.argv[2];
+
+    const siteConfig = {
+        title: "Yong's Blog",
+        url: "blog.yonggu.me",
+        gitRepo: "https://github.com/keenguy/blogit"
+    }
+
+    const site = new MumeBlog(srcDir, buildDir, siteConfig);
+
+    if (arg == 'init') {
+        init();
+    }
+    else if (arg == 'copy') {
+        copyData();
+    } else if (arg == 'build') {
+        site.generateHtmls();
+    } else if (arg == 'deploy' || 'd') {
+        deploy();
+    }
+    else {
+        site.generateHtmls();  // generate htmls based on 'srcDir', writing to 'buildDir'
+        copyData();
+    }
 }
-
-const site = new MumeBlog(srcDir,buildDir,siteConfig);
-
-const arg = process.argv[2];
-
-if (arg == 'init'){
-    init();
-}
-else if (arg == 'copy'){
-    copyData();
-}else if(arg == 'build'){
-    site.generateHtmls();
-}else if(arg == 'deploy' || 'd'){
-    deploy();
-}
-else{
-    site.generateHtmls();  // generate htmls based on 'srcDir', writing to 'buildDir'
-    copyData();
-}
-
 
 function init() {
-    fs.copy(path.resolve(__dirname,"../../needToCopy"), cwd).then(() => {
+    fs.copy(path.resolve(__dirname, "../../needToCopy"), cwd).then(() => {
         console.log("Blog initialized!");
     });
 }
@@ -55,7 +57,7 @@ async function copyData() {
     await compileCss().then(() => console.log("(^_^) All less files in assets/ compiled."));
     if (copyFiles) {
         copyFiles.forEach(filePath =>
-            asyncEvents.push(fs.copy(path.resolve(cwd,filePath), path.resolve(buildDir, filePath))));
+            asyncEvents.push(fs.copy(path.resolve(cwd, filePath), path.resolve(buildDir, filePath))));
     }
     await Promise.all(asyncEvents).then(() => console.log('(^_^) Copy assets and other files succeed!'));
 }
@@ -63,7 +65,7 @@ async function copyData() {
 async function compileCss() {
     let lessEvents = [];
     return new Promise((resolve, reject) => {
-        klaw(path.resolve(cwd,'assets/css')).on('data', item => {
+        klaw(path.resolve(cwd, 'assets/css')).on('data', item => {
             if (path.extname(item.path) != '.less')
                 return;
             // console.log(item.path);
@@ -83,21 +85,23 @@ function lessify(str, options) {
     })
 }
 
-function deploy(){
+function deploy() {
     del([
         // 这里我们使用一个通配模式来匹配 `mobile` 文件夹中的所有东西
         'docs/.git',
         'docs/.gitignore'
-    ]).then(()=>{
-    // starting a new repo
-    require('simple-git')(__dirname+'/docs')
-    .outputHandler(function (command, stdout, stderr) {
-        stderr.pipe(process.stderr);
-     })
-    .init()
-    .add('./*')
-    .commit("commit by auto deployment!")
-    .addRemote('origin', 'https://github.com/keenguy/blog.git')
-    .push(['-f', 'origin', 'master']);
+    ]).then(() => {
+        // starting a new repo
+        require('simple-git')(__dirname + '/docs')
+            .outputHandler(function (command, stdout, stderr) {
+                stderr.pipe(process.stderr);
+            })
+            .init()
+            .add('./*')
+            .commit("commit by auto deployment!")
+            .addRemote('origin', 'https://github.com/keenguy/blog.git')
+            .push(['-f', 'origin', 'master']);
     });
 }
+
+export = entry
