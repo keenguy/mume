@@ -1,9 +1,9 @@
 {
-    "name": "@keenguy/mume-blog",
-    "version": "0.2.2",
-    "description": "A powerful markdown tool",
+    "name": "@keenguy/wret",
+    "version": "0.0.1",
+    "description": "A markdown notes bloging tool",
     "main": "out/src/index.js",
-    "typings": "out/src/mume.d.ts",
+    "typings": "out/src/index.d.ts",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "node_modules/.bin/tsc",
@@ -17,14 +17,16 @@
         "docs",
         "out",
         "styles",
+        "bin",
         "needToCopy"
     ],
     "keywords": [
-        "markdown"
+        "markdown",
+        "blog"
     ],
-    "author": "shd101wyy",
-    "license": "NCSA",
-    "repository": "https://github.com/keenguy/mume-blog",
+    "author": "keenguy",
+    "license": "",
+    "repository": "https://github.com/keenguy/wret",
     "dependencies": {
         "babyparse": "^0.4.6",
         "cheerio": "0.15.0",
